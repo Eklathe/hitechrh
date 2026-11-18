@@ -1,0 +1,251 @@
+---
+const title = "Collecte documentaire RH & Paie | Hi-Tech RH";
+const description = "Préparez votre audit social avec une checklist documentaire complète, généraliste ou BTP, et transmettez votre état d'avancement à Hi-Tech RH.";
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0d2947" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="stylesheet" href="/audit-rh-paie/styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#contenu">Aller au formulaire</a>
+    <header class="site-header">
+      <div class="shell topline">
+        <a href="/" class="brand" aria-label="Hi-Tech RH, retour à l'accueil"><span class="brand-icon" aria-hidden="true">RH</span><span>HI-TECH RH</span></a>
+        <nav class="topnav" aria-label="Navigation principale">
+          <a href="/">Accueil</a><a href="/audit-rh-paie" aria-current="page">Audit RH & Paie</a>
+        </nav>
+      </div>
+    </header>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="shell">
+        <p class="eyebrow">Accompagnement RH & conformité sociale</p>
+        <h1 id="page-title">Préparez votre audit RH & Paie</h1>
+        <p>Une liste de pièces adaptée à votre entreprise, un suivi de collecte simple et un récapitulatif à partager avec notre cabinet. Aucun document salarié n'est déposé sur cette page.</p>
+        <div class="hero-badges"><span>Deux parcours : général et BTP</span><span>Suivi par document</span><span>Export CSV et impression</span></div>
+      </div>
+    </section>
+    <main class="shell page" id="contenu">
+      <aside class="notice" aria-label="Information sécurité">
+        <span class="notice-symbol" aria-hidden="true">ⓘ</span>
+        <div><strong>Documents confidentiels : transmission séparée</strong>
+          Cette page ne reçoit ni bulletins de paie, ni contrats, ni pièces d'identité, ni données de santé. Elle sert uniquement à indiquer la disponibilité des pièces. Votre interlocuteur Hi-Tech RH vous communiquera un espace documentaire sécurisé pour les justificatifs.
+        </div>
+      </aside>
+
+      <h2 class="intro-title">Sélectionnez votre parcours</h2>
+      <p class="intro-sub">Le formulaire BTP reprend toutes les rubriques du formulaire général et ajoute les contrôles spécifiques au bâtiment et aux travaux publics.</p>
+      <div class="mode-switch" role="tablist" aria-label="Type de collecte">
+        <button type="button" class="mode" id="mode-general" role="tab" aria-controls="checklist" aria-selected="true" data-mode="general">
+          <span class="circle" aria-hidden="true">▤</span><span><strong>Audit RH & Paie — Général</strong><small>Tous secteurs · Contrats, paie, DSN, obligations sociales et RH</small></span>
+        </button>
+        <button type="button" class="mode" id="mode-btp" role="tab" aria-controls="checklist" aria-selected="false" data-mode="btp">
+          <span class="circle" aria-hidden="true">▥</span><span><strong>Audit RH & Paie — BTP</strong><small>Socle commun + CIBTP, PRO BTP, déplacements et chantiers</small></span>
+        </button>
+      </div>
+
+      <form id="audit-form" name="audit-rh-paie" method="POST" data-netlify="true" netlify-honeypot="verification_site" action="/audit-rh-paie/">
+        <input type="hidden" name="form-name" value="audit-rh-paie" />
+        <input type="hidden" name="type_audit" id="type-audit" value="Général" />
+        <input type="hidden" name="synthese_documents" id="synthese-documents" value="" />
+        <p hidden><label>Ne pas remplir ce champ <input name="verification_site" tabindex="-1" autocomplete="off" /></label></p>
+
+        <section class="panel" aria-labelledby="identification-title">
+          <div class="panel-head"><h2 id="identification-title">Identification de votre entreprise</h2><p>Informations de contact nécessaires au suivi du dossier de collecte.</p></div>
+          <div class="panel-body">
+            <div class="fields">
+              <div class="field"><label for="raison_sociale">Raison sociale <span aria-hidden="true">*</span></label><input id="raison_sociale" name="raison_sociale" autocomplete="organization" maxlength="160" required /></div>
+              <div class="field"><label for="siret">SIRET <span class="optional">(facultatif)</span></label><input id="siret" name="siret" inputmode="numeric" pattern="[0-9]{14}" maxlength="14" placeholder="14 chiffres" /><span class="field-hint">Uniquement pour identifier l'entreprise, sans pièce justificative ici.</span></div>
+              <div class="field"><label for="contact_nom">Nom du contact <span aria-hidden="true">*</span></label><input id="contact_nom" name="contact_nom" autocomplete="name" maxlength="120" required /></div>
+              <div class="field"><label for="contact_email">Adresse e-mail professionnelle <span aria-hidden="true">*</span></label><input type="email" id="contact_email" name="contact_email" autocomplete="email" maxlength="180" required /></div>
+              <div class="field"><label for="effectif">Effectif de l'entreprise <span class="optional">(facultatif)</span></label><select id="effectif" name="effectif"><option value="">À préciser</option><option>1 à 10 salariés</option><option>11 à 49 salariés</option><option>50 à 249 salariés</option><option>250 salariés et plus</option></select></div>
+              <div class="field"><label for="periode">Période concernée <span class="optional">(facultatif)</span></label><input id="periode" name="periode" maxlength="100" placeholder="Ex. : janvier 2024 – décembre 2026" /></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="metrics" aria-live="polite" aria-atomic="true">
+          <div class="metric"><b id="metric-total">0</b><span>Pièces à examiner</span></div>
+          <div class="metric"><b id="metric-transmis">0</b><span>Pièces disponibles / transmises</span></div>
+          <div class="metric"><b id="metric-restant">0</b><span>Pièces à fournir</span></div>
+        </div>
+        <div class="progress-track" role="progressbar" id="progress" aria-label="Avancement du traitement des pièces" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar" id="progress-bar"></div></div>
+
+        <div class="tools no-print">
+          <input class="search" type="search" id="recherche" placeholder="Rechercher une pièce, un organisme, une obligation…" aria-label="Rechercher parmi les pièces" />
+          <label class="filter-toggle"><input type="checkbox" id="filtre-restantes" /> Afficher uniquement les pièces non disponibles</label>
+          <button type="button" class="btn" id="ouvrir-tout">Tout déplier</button>
+          <button type="button" class="btn" id="fermer-tout">Tout replier</button>
+        </div>
+        <section id="checklist" class="groups" role="tabpanel" aria-labelledby="mode-general"></section>
+        <div id="aucun-resultat" class="empty">Aucun document ne correspond à votre recherche.</div>
+
+        <section class="panel form-bottom" aria-labelledby="finalisation-title">
+          <div class="panel-head"><h2 id="finalisation-title">Finalisez votre état de collecte</h2><p>Vous pouvez conserver votre relevé sur votre ordinateur ou envoyer uniquement une synthèse documentaire au cabinet.</p></div>
+          <div class="panel-body">
+            <div class="field"><label for="commentaires">Informations complémentaires <span class="optional">(facultatif)</span></label><textarea id="commentaires" name="commentaires" rows="3" maxlength="2000" placeholder="Précisions sur les documents, contraintes de transmission, particularités de l'activité… Ne renseignez aucune donnée personnelle de salarié."></textarea></div>
+            <div class="submit-row no-print">
+              <button class="btn" type="button" id="export-csv">Exporter en CSV</button>
+              <button class="btn" type="button" id="imprimer">Imprimer / PDF</button>
+              <button class="btn btn-ghost" type="button" id="reinitialiser">Réinitialiser les statuts</button>
+            </div>
+            <div class="privacy">
+              <details><summary>Confidentialité et traitement des données</summary>
+                <p>Le responsable du traitement de ce formulaire est HI-TECH RH. La finalité est la préparation et le suivi de la collecte documentaire dans le cadre d'une mission ou d'une demande d'accompagnement. Les données transmises portent sur les coordonnées professionnelles du contact et le statut des pièces demandées. Elles ne doivent contenir aucune donnée nominative de salarié, document de paie, donnée de santé ou mot de passe. Vous pouvez exercer vos droits relatifs à vos données auprès de votre interlocuteur habituel du cabinet. La politique de confidentialité du site, les durées de conservation et l'information relative au prestataire de traitement doivent être finalisées avant mise en service du formulaire.</p>
+              </details>
+            </div>
+            <label class="validation"><input type="checkbox" id="accord-envoi" required /><span>Je confirme être autorisé(e) à transmettre les informations professionnelles saisies et ne pas avoir renseigné de données personnelles de salariés. <strong>Cette confirmation est nécessaire uniquement pour l'envoi.</strong></span></label>
+            <div class="submit-row no-print">
+              <button class="btn btn-primary" type="submit" id="envoyer">Transmettre la synthèse à HI-TECH RH</button>
+              <span class="submit-info">Aucun justificatif n'est joint à cet envoi.</span>
+            </div>
+            <div id="retour-envoi" class="feedback" role="status" aria-live="polite"></div>
+          </div>
+        </section>
+      </form>
+    </main>
+    <footer class="site-footer"><div class="shell"><span>© HI-TECH RH · Externalisation de la paie et accompagnement social</span><a href="/">Retour à l'accueil</a></div></footer>
+    <script id="documents-data" type="application/json">{"general":[["01","Entreprise et cadre social",[["Kbis ou justificatif d'immatriculation RNE","Document récent"],["Avis de situation SIRENE et liste des établissements","SIREN et tous les SIRET"],["Statuts et modifications de forme juridique","Versions en vigueur et historique pertinent"],["Organigramme juridique et fonctionnel",""],["Description des activités réellement exercées","Activité principale et activités secondaires"],["Liste des effectifs et des établissements",""],["Conventions collectives et accords de branche applicables","IDCC et justificatif de rattachement"],["Accords d'entreprise et d'établissement","Incluant avenants et justificatifs de dépôt"],["DUE, usages, engagements unilatéraux et notes de service",""],["Règlement intérieur et formalités, si applicable",""],["Délégations de pouvoirs et décisions sur les rémunérations des dirigeants",""]]],["02","Effectifs, embauches et contrats",[["Registre unique du personnel par établissement",""],["Export nominatif des effectifs présents et sortis","Sur 36 mois"],["Contrats de travail et avenants signés",""],["DPAE et accusés de réception",""],["Fiches de poste et classification des emplois",""],["Grilles salariales et minima conventionnels",""],["Justificatifs des CDD, CDDU et de leurs renouvellements","Selon les contrats concernés"],["Conventions de forfait et accords correspondants","Si applicable"],["Contrats à temps partiel, avenants et compléments d'heures","Si applicable"],["Contrats d'apprentissage/professionnalisation et conventions CFA","Si applicable"],["Conventions de stage et contrats intérim","Si applicable"],["Justificatifs de vérification des autorisations de travail","Salariés étrangers concernés ; éviter les copies inutiles"],["Documents remis à l'embauche et notices de protection sociale",""]]],["03","Temps de travail, congés et absences",[["Horaires collectifs, plannings et accords d'aménagement",""],["Relevés de pointage et décomptes individuels du temps de travail","36 mois"],["État des heures supplémentaires et complémentaires","36 mois"],["Justificatifs des majorations, astreintes, nuits et dimanches",""],["Suivi des forfaits jours et entretiens afférents","Si applicable"],["Tableaux de congés payés et soldes acquis/pris/restants","36 mois"],["États RTT, repos compensateurs et compte épargne-temps","Si applicable"],["Suivi des absences et suspensions des contrats","36 mois ; sans diagnostic médical"],["Attestations de salaire et décomptes IJSS",""],["États de subrogation et régularisations CPAM/MSA",""],["Calculs de maintien de salaire et indemnités de prévoyance",""],["Justificatifs d'activité partielle et d'autorisations","Si applicable"]]],["04","Production de la paie",[["Bulletins de paie complets","36 derniers mois"],["Journaux et états récapitulatifs de paie","36 derniers mois"],["Exports cumuls individuels et annuels",""],["États des bases, tranches et assiettes de cotisations",""],["Fichiers d'éléments variables de paie et validations","36 mois"],["Paramétrage logiciel et rubriques spécifiques",""],["Historique des rappels et régularisations de paie",""],["Accords et calculs de primes, commissions et 13e mois",""],["Pièces justifiant avantages en nature et frais professionnels",""],["Calcul des indemnités de congés payés et absences",""],["Relevés des acomptes, avances et saisies sur rémunération",""],["Fichiers de virements et justificatifs de paiement",""]]],["05","DSN, cotisations et organismes sociaux",[["DSN mensuelles en fichiers XML","36 derniers mois"],["Accusés de conformité et comptes rendus métier (CRM)","URSSAF, Agirc-Arrco, organismes complémentaires, DGFiP"],["Signalements DSN arrêts, reprises et fins de contrat",""],["Fiches de paramétrage des organismes","Mutuelle et prévoyance"],["Notifications de taux AT/MP par établissement",""],["Notifications des taux de versement mobilité","Si applicable"],["États de calcul des allègements et exonérations","Incluant RGDU pour 2026"],["États de charges mensuelles et bordereaux de cotisations",""],["Justificatifs de paiement URSSAF, retraite, mutuelle et prévoyance",""],["Relevés de comptes cotisants et éventuels échéanciers",""],["Déclarations formation, apprentissage, DOETH et contributions liées aux seuils","Selon assujettissement"],["Historique des anomalies DSN et régularisations",""]]],["06","Mutuelle, prévoyance et épargne salariale",[["Contrats santé, prévoyance et retraite supplémentaire",""],["Accords, DUE et notices d'information des régimes",""],["Taux, catégories objectives et répartition des cotisations",""],["Justificatifs d'affiliation et de dispense de mutuelle","Si applicable"],["Dossiers de portabilité et prestations de prévoyance","Si applicable"],["Accords de participation, intéressement et plans d'épargne","Si applicable"],["Calculs et états de répartition des primes d'épargne salariale","Si applicable"],["Décisions et calculs de PPV","Si applicable"]]],["07","Santé, sécurité et obligations RH",[["DUERP et mises à jour antérieures",""],["Plan de prévention / PAPRIPACT, si applicable",""],["Justificatif d'adhésion au SPST et fiche d'entreprise",""],["Attestations de suivi de santé au travail / avis d'aptitude","Sans données médicales confidentielles"],["Déclarations AT/MP et décisions de caisse","Si applicable"],["Registres, vérifications, habilitations et formations sécurité",""],["Documents relatifs au CSE, élections et PV de carence","Si applicable"],["PV de réunions, accords et consultations du CSE","Si applicable"],["BDESE, bilan social et index égalité professionnelle","Selon seuils applicables"],["Plan de développement des compétences",""],["Entretiens de parcours professionnel et bilans récapitulatifs",""],["Affichages et informations obligatoires aux salariés",""]]],["08","Sorties, comptabilité et contrôles",[["Liste des sorties et motifs","Sur 36 mois"],["Courriers de rupture, procédures et homologations",""],["Solde de tout compte, certificat de travail, attestation France Travail",""],["Calculs et justificatifs des indemnités de rupture",""],["Contentieux sociaux, transactions et décisions de justice","Si applicable"],["Balance et grand livre des comptes de personnel/charges sociales","3 exercices et exercice en cours"],["Écritures d'intégration et rapprochements paie/comptabilité",""],["Provisions CP, RTT, primes, litiges et engagements sociaux",""],["Contrôles URSSAF, inspection du travail et suites de contrôle","Si applicable"],["Procédures de contrôle interne et habilitations des logiciels RH/paie",""],["Registre RGPD des traitements RH/paie et règles de conservation",""]]]],"btp":[["09","BTP — champ d'application et affiliation",[["Justificatifs d'activité BTP et de rattachement à la CCN","Ouvriers, ETAM, cadres, selon activités réellement exercées"],["Affiliations à la caisse CIBTP compétente","N° adhérent et établissements"],["Attestations CIBTP et relevés de compte",""],["Historique des déclarations et paiements CIBTP","36 mois"],["Certificats et états des droits aux congés",""],["Justificatifs des affiliations PRO BTP / autres caisses de branche","Mutuelle, prévoyance et retraite"],["Paramétrage des cotisations et garanties conventionnelles BTP",""],["Documents de suivi des salariés intérimaires et sous-traitants","Si applicable"]]],["10","BTP — paie, déplacements et intempéries",[["Barèmes conventionnels d'indemnités de repas, trajet et transport","Versions applicables aux périodes contrôlées"],["Tableaux des zones et distances de déplacement","Domicile, dépôt, chantier selon règles applicables"],["Fiches de chantier / ordres de mission et lieux d'intervention",""],["Calculs des indemnités de petits déplacements","Repas, trajet, transport"],["Ordres et justificatifs de grands déplacements","Hébergement, restauration, transport"],["Justificatifs des indemnités soumises ou exonérées de cotisations",""],["Déclarations de chômage-intempéries et demandes de remboursement","Si applicable"],["Suivi et calcul de l'indemnisation des heures d'intempéries","Si applicable"],["Historique des déductions forfaitaires spécifiques","Si applicable et selon les règles de l'année auditée"],["Plannings, heures supplémentaires et repos par chantier",""]]],["11","BTP — prévention et obligations chantier",[["Cartes d'identification professionnelle BTP / justificatifs","Salariés concernés"],["Plans particuliers de sécurité et de protection de la santé (PPSPS)","Chantiers concernés"],["Plans de prévention et protocoles de sécurité","Selon nature des interventions"],["Habilitations électriques et autorisations de conduite","Si concerné"],["CACES et attestations de formation nécessaires aux postes","Si concernés"],["Registres de remise des EPI et formations au risque chantier",""],["Vérifications périodiques du matériel et des équipements","Si applicable"],["Attestations de vigilance des sous-traitants","Lorsque requises"],["Justificatifs relatifs au détachement et à la carte BTP des salariés détachés","Si applicable"]]]]}</script>
+    <script is:inline>
+      (() => {
+        const source = document.getElementById('documents-data');
+        const DATA = JSON.parse(source.textContent);
+        const modeButtons = [...document.querySelectorAll('[data-mode]')];
+        const root = document.getElementById('checklist');
+        const search = document.getElementById('recherche');
+        const onlyMissing = document.getElementById('filtre-restantes');
+        const form = document.getElementById('audit-form');
+        const feedback = document.getElementById('retour-envoi');
+        let currentMode = 'general';
+        // Les statuts restent uniquement en mémoire de l'onglet jusqu'à export ou envoi explicite.
+        const statuses = {};
+        const getGroups = () => currentMode === 'btp' ? [...DATA.general, ...DATA.btp] : DATA.general;
+        const options = [
+          ['a_fournir','À fournir'], ['transmis','Disponible / transmis'],
+          ['en_cours','En cours de préparation'], ['na','Non applicable']
+        ];
+        const escapeHTML = (input) => String(input ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+        const allDocs = () => getGroups().flatMap(group => group[2].map((doc, index) => ({
+          id:group[0]+'-'+index,
+          group:group[1],
+          name:doc[0],
+          hint:doc[1],
+          btp:Number(group[0]) >= 9
+        })));
+        const statusFor = id => statuses[id] || 'a_fournir';
+        const labelFor = status => options.find(row=>row[0]===status)?.[1] || status;
+
+        function render(){
+          root.innerHTML = getGroups().map(group => {
+            const docs = group[2].map((doc,index)=>({id:group[0]+'-'+index,name:doc[0],hint:doc[1]}));
+            return '<details class="doc-group" open data-group="'+group[0]+'"><summary><span>'+
+              escapeHTML(group[1])+'<span class="doc-count">'+docs.length+' pièces</span></span></summary><div class="doc-lines">'+
+              docs.map(doc => '<div class="doc-line" data-doc="'+doc.id+'"><div class="doc-label">'+escapeHTML(doc.name)+
+              (Number(group[0]) >= 9 ? '<span class="special-tag">BTP</span>':'')+
+              (doc.hint?'<span class="doc-note">'+escapeHTML(doc.hint)+'</span>':'')+
+              '</div><select class="doc-status" aria-label="Statut : '+escapeHTML(doc.name)+'" data-id="'+doc.id+'" data-status="'+statusFor(doc.id)+'">'+
+              options.map(opt=>'<option value="'+opt[0]+'"'+(statusFor(doc.id)===opt[0]?' selected':'')+'>'+opt[1]+'</option>').join('')+
+              '</select></div>').join('')+'</div></details>';
+          }).join('');
+          root.querySelectorAll('.doc-status').forEach(select=>select.addEventListener('change', event=>{
+            statuses[event.target.dataset.id]=event.target.value;
+            event.target.dataset.status=event.target.value;
+            updateMetrics();
+            filterRows();
+          }));
+          updateMetrics();filterRows();
+        }
+        function updateMetrics(){
+          const docs=allDocs();
+          const transmitted=docs.filter(d=>statusFor(d.id)==='transmis').length;
+          const pending=docs.filter(d=>statusFor(d.id)==='a_fournir').length;
+          const assessed=docs.filter(d=>statusFor(d.id)!=='a_fournir').length;
+          document.getElementById('metric-total').textContent=docs.length;
+          document.getElementById('metric-transmis').textContent=transmitted;
+          document.getElementById('metric-restant').textContent=pending;
+          const progress=Math.round(100*assessed/(docs.length||1));
+          document.getElementById('progress').setAttribute('aria-valuenow',String(progress));
+          document.getElementById('progress-bar').style.width=progress+'%';
+        }
+        function filterRows(){
+          const query=search.value.trim().toLocaleLowerCase('fr');
+          let visible=0;
+          root.querySelectorAll('.doc-group').forEach(group=>{
+            let count=0;
+            group.querySelectorAll('.doc-line').forEach(row=>{
+              const matches=(!query||row.textContent.toLocaleLowerCase('fr').includes(query)) && (!onlyMissing.checked||statusFor(row.dataset.doc)!=='transmis'&&statusFor(row.dataset.doc)!=='na');
+              row.hidden=!matches;
+              if(matches) count++;
+            });
+            group.hidden=count===0;
+            if(query&&count) group.open=true;
+            visible+=count;
+          });
+          document.getElementById('aucun-resultat').classList.toggle('visible',visible===0);
+        }
+        function switchMode(mode){
+          currentMode=mode;
+          modeButtons.forEach(b=>b.setAttribute('aria-selected',String(b.dataset.mode===mode)));
+          root.setAttribute('aria-labelledby','mode-'+mode);
+          document.getElementById('type-audit').value=mode==='btp'?'BTP':'Général';
+          feedback.className='feedback';
+          feedback.textContent='';
+          render();
+        }
+        modeButtons.forEach(button=>button.addEventListener('click',()=>switchMode(button.dataset.mode)));
+        search.addEventListener('input',filterRows);
+        onlyMissing.addEventListener('change',filterRows);
+        document.getElementById('ouvrir-tout').addEventListener('click',()=>root.querySelectorAll('details').forEach(d=>d.open=true));
+        document.getElementById('fermer-tout').addEventListener('click',()=>root.querySelectorAll('details').forEach(d=>d.open=false));
+        document.getElementById('imprimer').addEventListener('click',()=>{root.querySelectorAll('details').forEach(d=>d.open=true);window.print();});
+        document.getElementById('reinitialiser').addEventListener('click',()=>{
+          if(!window.confirm('Réinitialiser tous les statuts de collecte de cette page ?')) return;
+          Object.keys(statuses).forEach(key=>delete statuses[key]);render();
+        });
+        const csvCell=v=>'"'+String(v??'').replaceAll('"','""')+'"';
+        function getSummary(){
+          return allDocs().map(d=>[d.group,d.name,d.hint,labelFor(statusFor(d.id))].join(' | ')).join('\n');
+        }
+        document.getElementById('export-csv').addEventListener('click',()=>{
+          const docs=allDocs();
+          const header=['Type d’audit','Entreprise','SIRET','Contact','Email','Période','Rubrique','Pièce demandée','Précisions','Statut'];
+          const info=[currentMode==='btp'?'BTP':'Général',form.raison_sociale.value,form.siret.value,form.contact_nom.value,form.contact_email.value,form.periode.value];
+          const rows=[header,...docs.map(d=>[...info,d.group,d.name,d.hint,labelFor(statusFor(d.id))])];
+          const csv='\uFEFF'+rows.map(r=>r.map(csvCell).join(';')).join('\r\n');
+          const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+          const link=document.createElement('a');
+          link.href=url;
+          link.download='hitechrh-collecte-'+currentMode+'-'+new Date().toISOString().slice(0,10)+'.csv';
+          document.body.appendChild(link);link.click();link.remove();
+          setTimeout(()=>URL.revokeObjectURL(url),1000);
+        });
+        form.addEventListener('submit',async event=>{
+          event.preventDefault();
+          feedback.className='feedback';feedback.textContent='';
+          if(!form.reportValidity()) return;
+          if(!document.getElementById('accord-envoi').checked){feedback.className='feedback error';feedback.textContent='Merci de confirmer la déclaration avant l’envoi.';return;}
+          const btn=document.getElementById('envoyer');
+          btn.disabled=true;btn.textContent='Envoi en cours…';
+          try{
+            document.getElementById('synthese-documents').value=getSummary();
+            const payload = new URLSearchParams(new FormData(form));
+            // Les statuts sont seuls transmis, jamais des fichiers salariés.
+            const res=await fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:payload.toString()});
+            if(!res.ok) throw new Error('Le service ne confirme pas la réception.');
+            feedback.className='feedback success';
+            feedback.textContent='Votre synthèse documentaire a été transmise. Conservez un export CSV pour vos archives.';
+          }catch(error){
+            feedback.className='feedback error';
+            feedback.textContent='L’envoi n’a pas été confirmé. Exportez votre synthèse en CSV et contactez votre interlocuteur HI-TECH RH. Aucun document n’a été téléversé.';
+          }finally{btn.disabled=false;btn.textContent='Transmettre la synthèse à HI-TECH RH';}
+        });
+        render();
+      })();
+    </script>
+  </body>
+</html>
