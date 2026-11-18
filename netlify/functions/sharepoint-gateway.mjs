@@ -37,12 +37,13 @@ function getEnv() {
   return { tenantId, spaClientId, apiClientId, apiClientSecret, folders };
 }
 
-function publicConfig(settings) {
+function publicConfig(settings, request) {
   if (!settings) {
     // Diagnostic limité aux Deploy Previews : jamais de valeurs, noms d'utilisateurs,
     // chemins SharePoint, identifiants de dossiers ou secrets dans la réponse.
     const out = { enabled: false };
-    if (process.env.CONTEXT === "deploy-preview") {
+    const isPreview = /^deploy-preview-[0-9]+--hitechrhfr\.netlify\.app$/i.test(new URL(request.url).hostname);
+    if (isPreview) {
       const invalid = [];
       for (const key of ["ENTRA_TENANT_ID", "ENTRA_SPA_CLIENT_ID", "ENTRA_API_CLIENT_ID"]) {
         if (!GUID.test((process.env[key] ?? "").trim())) invalid.push(key);
@@ -179,7 +180,7 @@ async function createUploadSession(settings, client, documentId, originalName, s
 export default async function sharepointGateway(request) {
   if (!["GET", "POST"].includes(request.method)) return json(405, { error: "Méthode non autorisée." });
   const settings = getEnv();
-  if (request.method === "GET") return publicConfig(settings);
+  if (request.method === "GET") return publicConfig(settings, request);
   if (!settings) return json(503, { error: "Le dépôt sécurisé n'est pas encore activé." });
   const origin = request.headers.get("origin");
   if (origin && origin !== new URL(request.url).origin) return json(403, { error: "Origine refusée." });
