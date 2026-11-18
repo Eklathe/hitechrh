@@ -49,14 +49,27 @@ function publicConfig(settings, request) {
         if (!GUID.test((process.env[key] ?? "").trim())) invalid.push(key);
       }
       if (!(process.env.ENTRA_API_CLIENT_SECRET ?? "").trim()) invalid.push("ENTRA_API_CLIENT_SECRET");
-      let mapValid = false;
-      try {
-        const map = JSON.parse(process.env.CLIENT_FOLDERS_JSON ?? "");
-        mapValid = !!map && typeof map === "object" && !Array.isArray(map);
-      } catch {}
-      if (!mapValid) invalid.push("CLIENT_FOLDERS_JSON");
+      const foldersRaw = (process.env.CLIENT_FOLDERS_JSON ?? "").trim();
+      let foldersIssue = null;
+      if (!foldersRaw) {
+        foldersIssue = "missing_or_empty";
+      } else {
+        try {
+          const map = JSON.parse(foldersRaw);
+          if (typeof map === "string") foldersIssue = "json_string_instead_of_object";
+          else if (!map || typeof map !== "object" || Array.isArray(map)) foldersIssue = "wrong_json_structure";
+        } catch {
+          foldersIssue = "invalid_json_syntax";
+        }
+      }
+      if (foldersIssue) invalid.push("CLIENT_FOLDERS_JSON");
       if (process.env.ENABLE_SHAREPOINT_UPLOADS !== "true") invalid.push("ENABLE_SHAREPOINT_UPLOADS");
-      out.previewChecks = { invalidVariables: invalid, context: "Deploy Previews" };
+      out.previewChecks = {
+        invalidVariables: invalid,
+        context: "Deploy Previews",
+        clientFoldersIssue: foldersIssue,
+        diagnosticVersion: 2
+      };
     }
     return json(200, out);
   }
