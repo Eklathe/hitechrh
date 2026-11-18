@@ -38,7 +38,27 @@ function getEnv() {
 }
 
 function publicConfig(settings) {
-  if (!settings) return json(200, { enabled: false });
+  if (!settings) {
+    // Diagnostic limité aux Deploy Previews : jamais de valeurs, noms d'utilisateurs,
+    // chemins SharePoint, identifiants de dossiers ou secrets dans la réponse.
+    const out = { enabled: false };
+    if (process.env.CONTEXT === "deploy-preview") {
+      const invalid = [];
+      for (const key of ["ENTRA_TENANT_ID", "ENTRA_SPA_CLIENT_ID", "ENTRA_API_CLIENT_ID"]) {
+        if (!GUID.test((process.env[key] ?? "").trim())) invalid.push(key);
+      }
+      if (!(process.env.ENTRA_API_CLIENT_SECRET ?? "").trim()) invalid.push("ENTRA_API_CLIENT_SECRET");
+      let mapValid = false;
+      try {
+        const map = JSON.parse(process.env.CLIENT_FOLDERS_JSON ?? "");
+        mapValid = !!map && typeof map === "object" && !Array.isArray(map);
+      } catch {}
+      if (!mapValid) invalid.push("CLIENT_FOLDERS_JSON");
+      if (process.env.ENABLE_SHAREPOINT_UPLOADS !== "true") invalid.push("ENABLE_SHAREPOINT_UPLOADS");
+      out.previewChecks = { invalidVariables: invalid, context: "Deploy Previews" };
+    }
+    return json(200, out);
+  }
   return json(200, {
     enabled: true,
     tenantId: settings.tenantId,
