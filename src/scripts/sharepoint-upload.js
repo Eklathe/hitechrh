@@ -100,6 +100,7 @@ async function authenticate(force = false) {
     // Le parcours est déterminé par le rattachement serveur et non par le client.
     const mode = profile.type === "btp" ? "btp" : "general";
     document.querySelector('[data-mode="' + mode + '"]')?.click();
+    document.dispatchEvent(new Event("hitechrh:render-list"));
     document.querySelectorAll("[data-mode]").forEach(button => {
       button.disabled = true;
       button.title = "Parcours défini par votre dossier client";
@@ -147,6 +148,7 @@ connectButton.addEventListener("click", () => authenticate(true));
 disconnectButton.addEventListener("click", async () => {
   updateConnected(false);
   account = null;
+  document.querySelectorAll(".doc-upload-button").forEach(button => button.remove());
   document.querySelectorAll("[data-mode]").forEach(button => {button.disabled = false; button.title = "";});
   title.textContent = "Connexion à votre espace client";
   explain("Connectez-vous avec le compte Microsoft autorisé par HI-TECH RH.");
