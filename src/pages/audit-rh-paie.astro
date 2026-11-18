@@ -49,6 +49,34 @@ const description = "Préparez votre audit social avec une checklist documentair
         </button>
       </div>
 
+      <section class="panel auth-panel" aria-labelledby="client-auth-title">
+        <div class="panel-head">
+          <h2 id="client-auth-title">Connexion à votre espace client</h2>
+          <p id="client-auth-description">Le dépôt sécurisé nécessite un compte Microsoft 365 autorisé par HI-TECH RH.</p>
+        </div>
+        <div class="panel-body">
+          <p id="client-auth-company" class="client-account" hidden></p>
+          <div class="submit-row">
+            <button id="client-connect" type="button" class="btn btn-primary" hidden>Se connecter avec Microsoft</button>
+            <button id="client-disconnect" type="button" class="btn" hidden>Se déconnecter</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel upload-panel" id="client-upload-panel" aria-label="Déposer un justificatif" hidden>
+        <div class="panel-head">
+          <h2>Déposer dans votre dossier SharePoint</h2>
+          <p>Référence <strong id="client-upload-category"></strong> — <span id="client-upload-doc-label"></span></p>
+        </div>
+        <div class="panel-body">
+          <label for="client-upload-file" class="upload-label">Choisissez un justificatif</label>
+          <input id="client-upload-file" type="file" accept=".pdf,.doc,.docx,.odt,.xls,.xlsx,.csv,.xml,.txt,.jpg,.jpeg,.png" />
+          <p class="field-hint">50 Mo maximum par fichier. PDF, Office, CSV, XML et images courantes.</p>
+          <button id="client-upload-confirm" type="button" class="btn btn-primary">Envoyer dans SharePoint</button>
+          <div id="client-upload-feedback" class="feedback" role="status" aria-live="polite"></div>
+        </div>
+      </section>
+
       <form id="audit-form" name="audit-rh-paie" method="POST" data-netlify="true" netlify-honeypot="verification_site" action="/audit-rh-paie/">
         <input type="hidden" name="form-name" value="audit-rh-paie" />
         <input type="hidden" name="type_audit" id="type-audit" value="Général" />
@@ -159,6 +187,7 @@ const description = "Préparez votre audit social avec une checklist documentair
             filterRows();
           }));
           updateMetrics();filterRows();
+          document.dispatchEvent(new Event("hitechrh:render-list"));
         }
         function updateMetrics(){
           const docs=allDocs();
@@ -247,5 +276,6 @@ const description = "Préparez votre audit social avec une checklist documentair
         render();
       })();
     </script>
+    <script>import "../scripts/sharepoint-upload.js";</script>
   </body>
 </html>
