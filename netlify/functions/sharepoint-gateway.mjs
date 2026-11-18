@@ -3,6 +3,7 @@ const GUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const VALID_DOC_ID = /^(?:0[1-9]|1[01])-(?:0|[1-9][0-9]{0,2})$/;
 const ALLOWED_EXTENSIONS = new Set(["pdf","doc","docx","odt","xls","xlsx","csv","xml","txt","jpg","jpeg","png"]);
 const MAX_BYTES = 50 * 1024 * 1024;
+const DOCUMENT_COUNTS = Object.freeze({"01":11,"02":13,"03":12,"04":12,"05":12,"06":8,"07":12,"08":11,"09":8,"10":10,"11":9});
 const GRAPH = "https://graph.microsoft.com/v1.0";
 
 function json(status, data) {
@@ -121,7 +122,10 @@ async function createUploadSession(settings, client, documentId, originalName, s
     return { error: "Taille de fichier non autorisée (maximum 50 Mo).", status: 422 };
   if (typeof documentId !== "string" || !VALID_DOC_ID.test(documentId))
     return { error: "Référence documentaire invalide.", status: 422 };
-  if (client.type !== "btp" && Number(documentId.split("-")[0]) >= 9)
+  const [category, docIndex] = documentId.split("-");
+  if (!(category in DOCUMENT_COUNTS) || Number(docIndex) >= DOCUMENT_COUNTS[category])
+    return { error: "Cette pièce ne figure pas dans la liste autorisée.", status: 422 };
+  if (client.type !== "btp" && Number(category) >= 9)
     return { error: "Cette rubrique est réservée au parcours BTP.", status: 403 };
 
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
